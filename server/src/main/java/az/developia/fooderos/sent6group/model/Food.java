@@ -26,6 +26,7 @@ public class Food {
   private String name;
   private String ingredients;
   private Double price;
+  private String coverImg;
   
   @ManyToOne
   @JoinColumn(name="restaurant_id")
