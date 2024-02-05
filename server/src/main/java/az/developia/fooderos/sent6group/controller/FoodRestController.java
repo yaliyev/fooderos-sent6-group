@@ -33,6 +33,19 @@ public class FoodRestController {
 		return new ResponseEntity<List<Food>>(foodRepository.findAll(),HttpStatus.OK);
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<Food> getFoodById(@PathVariable Long id){
+		
+		Optional<Food> resultFood = foodRepository.findById(id);
+		
+		if(resultFood.isEmpty()) {
+			throw new FoodNotFoundException("food is not found");
+		}
+		
+		return new ResponseEntity<Food>(resultFood.get(),HttpStatus.OK); 
+		
+	}
+	
 	@PostMapping("/")
 	public ResponseEntity<Food> postFood(@RequestBody Food food){
 		
