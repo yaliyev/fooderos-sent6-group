@@ -6,7 +6,34 @@ let foodCardsElement = document.getElementById('food-cards');
 
 // changePageFunctions
 
+let searchBoxInputElement = document.getElementById('search-box-input');
 
+searchBoxInputElement.addEventListener('input',(e)=>{
+
+     let inputValue = e.target.value;
+
+     let searchResultFoods = [];
+
+
+     if(inputValue.trim() == ""){
+          insertFoodsData(true);
+     }
+
+     for(let i = 0; i < foods.length;i++){
+          
+let food = foods[i];
+
+if(food.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1 || food.restaurant.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1 ){
+     searchResultFoods.push(food);
+}
+
+     }
+
+     foods = searchResultFoods;
+
+     insertFoodsData(false);
+  
+});
 
 
 async function getFoods(){
