@@ -3,6 +3,12 @@ let foods = [];
 
 let foodCardsElement = document.getElementById('food-cards');
 
+
+// changePageFunctions
+
+
+
+
 async function getFoods(){
      foods = await fetch('http://localhost:3000/api/foods').then(response=>response.json());
 
