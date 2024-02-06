@@ -108,7 +108,7 @@ function addToBasket(id){
              });
      }else{
 
-          basketFoods.push({id: id});
+          basketFoods.push({id: id,quantity:0});
 
           localStorage.setItem('fooderos-sent6-basket',JSON.stringify(basketFoods));
 

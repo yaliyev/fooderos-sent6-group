@@ -200,4 +200,60 @@ function countTotalPrice(){
 
 }
 
+function buyBasketItems(){
+
+  let allow = true;
+
+  for(let i = 0; i < basketFoodsObjects.length;i++){
+    let basketFoodsObject = basketFoodsObjects[i];
+
+
+    if(Number(document.getElementById(`quantity${basketFoodsObject.id}`).value) < 1){
+      allow = false;
+      break;
+    }
+
+  }
+
+  if(allow){
+
+    Swal.fire({
+      icon: "success",
+      title: "Redirect",
+      text: "You will be redirected to confirm order page",
+      timer: 1200
+    });
+
+    
+
+    for(let i = 0; i < basketFoods.length;i++){
+      basketFoods[i].quantity = Number(document.getElementById(`quantity${basketFoods[i].id}`).value);
+    }
+
+    localStorage.setItem("fooderos-sent6-basket",JSON.stringify(basketFoods));
+
+
+    window.location.replace('/templates/confirm-order.html');
+
+
+
+    
+
+
+
+  }else{
+
+    Swal.fire({
+      icon: "error",
+      title: "Basket",
+      text: "Basket Validation failed",
+      timer: 1200
+    });
+
+    
+
+  }
+
+}
+
 insertBasketData(true);
