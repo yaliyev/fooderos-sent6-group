@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import az.developia.fooderos.sent6group.exception.CustomerNotFoundException;
 import az.developia.fooderos.sent6group.exception.FoodNotFoundException;
 import az.developia.fooderos.sent6group.model.Message;
 
@@ -21,6 +22,12 @@ public class ApplicationErrorHandler {
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Message> handleEntityNotFoundException(EntityNotFoundException exception){
 		return new ResponseEntity<Message>(new Message(exception.getMessage()),HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(CustomerNotFoundException.class)
+	public ResponseEntity<Message> handleCustomerNotFoundException(CustomerNotFoundException exception){
+		return new ResponseEntity<Message>(new Message(exception.getMessage()),HttpStatus.NOT_FOUND);
+		
 	}
 	
 	
