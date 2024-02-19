@@ -23,7 +23,7 @@ import az.developia.fooderos.sent6group.repository.OrderItemRepository;
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RequestMapping("/api/orders/items")
-public class OrderItemController {
+public class OrderItemRestController {
 	
 	@Autowired
 	public OrderItemRepository orderItemRepository;

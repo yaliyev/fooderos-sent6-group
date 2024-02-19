@@ -1,67 +1,97 @@
-
 let foods = [];
 
-let foodCardsElement = document.getElementById('food-cards');
-
+let foodCardsElement = document.getElementById("food-cards");
 
 // changePageFunctions
 
-let searchBoxInputElement = document.getElementById('search-box-input');
+let searchBoxInputElement = document.getElementById("search-box-input");
 
-
-let basketString  = localStorage.getItem('fooderos-sent6-basket');
-
+let basketString = localStorage.getItem("fooderos-sent6-basket");
 
 let basketFoods = [];
 
-if(basketString != null){
-     basketFoods = JSON.parse(basketString);
+if (basketString != null) {
+  basketFoods = JSON.parse(basketString);
 }
 
-searchBoxInputElement.addEventListener('input',(e)=>{
+let filterPriceElement = document.getElementById("filter-price-element");
 
-     let inputValue = e.target.value;
+filterPriceElement.addEventListener("change", function (e) {
+  switch (e.target.value) {
+    case "Default":
+      insertFoodsData(true);
+      break;
 
-     let searchResultFoods = [];
+    case "Azalan":
+      sortFoods(true);
+      break;
+    case "Artan":
+      sortFoods(false);
+      break;
+  }
 
-
-     if(inputValue.trim() == ""){
-          insertFoodsData(true);
-     }
-
-     for(let i = 0; i < foods.length;i++){
-          
-let food = foods[i];
-
-if(food.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1 || food.restaurant.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1 ){
-     searchResultFoods.push(food);
-}
-
-     }
-
-     foods = searchResultFoods;
-
-     insertFoodsData(false);
-  
+  insertFoodsData(false);
 });
 
+searchBoxInputElement.addEventListener("input", (e) => {
+  let inputValue = e.target.value;
 
-async function getFoods(){
-     foods = await fetch('http://localhost:3000/api/foods').then(response=>response.json());
+  let searchResultFoods = [];
 
-     
+  if (inputValue.trim() == "") {
+    insertFoodsData(true);
+  }
+
+  for (let i = 0; i < foods.length; i++) {
+    let food = foods[i];
+
+    if (
+      food.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1 ||
+      food.restaurant.name.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+    ) {
+      searchResultFoods.push(food);
+    }
+  }
+
+  foods = searchResultFoods;
+
+  insertFoodsData(false);
+});
+
+async function getFoods() {
+  foods = await fetch("http://localhost:3000/api/foods").then((response) =>
+    response.json()
+  );
 }
 
-async function insertFoodsData(reload = false){
-   if(reload == true){
-     await getFoods();
-   }
-foodCardsElement.innerHTML = "";
-   for(let i = 0;i < foods.length;i++){
+function sortFoods(descended = false) {
+  if (descended == false) {
+    // artan sira
 
-     let food = foods[i];
+    foods.sort(function (a, b) {
+      return a.price - b.price;
+    });
 
-     let card = `
+  } else {
+    // azalan sira
+
+    foods.sort(function (a, b) {
+      return b.price - a.price;
+    });
+
+
+  }
+}
+
+async function insertFoodsData(reload = false) {
+  if (reload == true) {
+    await getFoods();
+  }
+  foodCardsElement.innerHTML = "";
+  for (let i = 0; i < foods.length; i++) {
+    let food = foods[i];
+
+    let card = `
      
      <div class="col-9 col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-9 mt-3">
                          <div class="card">
@@ -81,45 +111,39 @@ foodCardsElement.innerHTML = "";
 
      `;
 
-     foodCardsElement.innerHTML += card; 
-
-
-
-   }
+    foodCardsElement.innerHTML += card;
+  }
 }
 
-function addToBasket(id){
+function addToBasket(id) {
+  let exist = false;
 
-     let exist = false;
+  basketFoods.find((basketItem) => {
+    if (basketItem.id == id) {
+      exist = true;
+      return basketItem;
+    }
+  });
 
-     basketFoods.find((basketItem)=>{
-          if(basketItem.id == id){
-               exist = true;
-               return basketItem;
-          }
-     })
-     
-     if(exist){
-          Swal.fire({
-               icon: "error",
-               title: "Basket",
-               text: "Alreaady added to basket",
-               timer: 1200
-             });
-     }else{
+  if (exist) {
+    Swal.fire({
+      icon: "error",
+      title: "Basket",
+      text: "Alreaady added to basket",
+      timer: 1200,
+    });
+  } else {
+    basketFoods.push({ id: id, quantity: 0 });
 
-          basketFoods.push({id: id,quantity:0});
+    localStorage.setItem("fooderos-sent6-basket", JSON.stringify(basketFoods));
 
-          localStorage.setItem('fooderos-sent6-basket',JSON.stringify(basketFoods));
-
-          Swal.fire({
-               icon: "success",
-               title: "Basket",
-               text: "Added to basket",
-               timer: 1200
-             });
-     }
-
+    Swal.fire({
+      icon: "success",
+      title: "Basket",
+      text: "Added to basket",
+      timer: 1200,
+    });
+  }
 }
 
 insertFoodsData(true);
